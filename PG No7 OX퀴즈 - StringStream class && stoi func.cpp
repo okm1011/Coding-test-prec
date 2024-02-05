@@ -1,88 +1,42 @@
-#include <string>
-#include <vector>
-#include <sstream>
-using namespace std;
 
-
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11
-12
-13
-14
-15
-16
-17
-18
-19
-20
-21
-22
-23
-24
-25
-26
-27
-28
-29
-30
-31
-32
-33
-34
-35
-36
-37
-38
-39
-40
-41
-42
 #include <string>
 #include <vector>
 #include <sstream>
 
 using namespace std;
+//3 - 4 = -3"
 
+//stringstream >> 띄어쓰기[공백] 이나 \n 로 각각 끊어서 스트링에 할당할수가 있음... 
+//stoi() >> string to int 변환 ... 이거 함수1 std 1 두개로 코드 10분의 1로 줄어듦...
 vector<string> solution(vector<string> quiz) {
     vector<string> answer;
 
-    for(string& q : quiz)
-    {
-        stringstream ss(q);
-        string x, y, z;
-        string op;
+    for(int i = 0 ; i<quiz.size();i++){
+        string temp = quiz[i];
+        stringstream ss;
+        string x,y,z,op;
+        int res = 0;
+
+
+        ss.str(temp);
         ss >> x;
         ss >> op;
         ss >> y;
+        ss >> z;// = 은 필요가 없다.
         ss >> z;
-        ss >> z;
-
-        int result;
-        switch(op[0])
-        {
-            case '+':
-                result = stoi(x) + stoi(y);
-                break;
-            case '-':
-                result = stoi(x) - stoi(y);
-                break;
-            default:
-                break;
+        
+        if(op[0] == '+'){
+            res = stoi(x) + stoi(y);
+        }else if(op[0] == '-'){
+            res = stoi(x) - stoi(y);
         }
-
-        if(result == stoi(z))
+        if(stoi(z) == res){
             answer.push_back("O");
-        else
+        }else{
             answer.push_back("X");
+        }
     }
+    
 
     return answer;
 }
