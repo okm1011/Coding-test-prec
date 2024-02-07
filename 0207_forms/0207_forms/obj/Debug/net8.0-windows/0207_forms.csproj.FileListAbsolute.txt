@@ -1,0 +1,16 @@
+C:\Users\user\source\repos\0207_forms\0207_forms\bin\Debug\net8.0-windows\0207_forms.exe
+C:\Users\user\source\repos\0207_forms\0207_forms\bin\Debug\net8.0-windows\0207_forms.deps.json
+C:\Users\user\source\repos\0207_forms\0207_forms\bin\Debug\net8.0-windows\0207_forms.runtimeconfig.json
+C:\Users\user\source\repos\0207_forms\0207_forms\bin\Debug\net8.0-windows\0207_forms.dll
+C:\Users\user\source\repos\0207_forms\0207_forms\bin\Debug\net8.0-windows\0207_forms.pdb
+C:\Users\user\source\repos\0207_forms\0207_forms\obj\Debug\net8.0-windows\_0207_forms.Form1.resources
+C:\Users\user\source\repos\0207_forms\0207_forms\obj\Debug\net8.0-windows\0207_forms.csproj.GenerateResource.cache
+C:\Users\user\source\repos\0207_forms\0207_forms\obj\Debug\net8.0-windows\0207_forms.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\user\source\repos\0207_forms\0207_forms\obj\Debug\net8.0-windows\0207_forms.AssemblyInfoInputs.cache
+C:\Users\user\source\repos\0207_forms\0207_forms\obj\Debug\net8.0-windows\0207_forms.AssemblyInfo.cs
+C:\Users\user\source\repos\0207_forms\0207_forms\obj\Debug\net8.0-windows\0207_forms.csproj.CoreCompileInputs.cache
+C:\Users\user\source\repos\0207_forms\0207_forms\obj\Debug\net8.0-windows\0207_forms.dll
+C:\Users\user\source\repos\0207_forms\0207_forms\obj\Debug\net8.0-windows\refint\0207_forms.dll
+C:\Users\user\source\repos\0207_forms\0207_forms\obj\Debug\net8.0-windows\0207_forms.pdb
+C:\Users\user\source\repos\0207_forms\0207_forms\obj\Debug\net8.0-windows\0207_forms.genruntimeconfig.cache
+C:\Users\user\source\repos\0207_forms\0207_forms\obj\Debug\net8.0-windows\ref\0207_forms.dll
