@@ -1,17 +1,30 @@
 #include <iostream>
 #include <vector>
 #include <algorithm>
-
+#include <queue>
 using namespace std;
 
 class Solution {
 public:
-    int majorityElement(vector<int>& nums) {
-        // 시간복잡도 O(1)은 N과 상관없이 일정하게 풀 수 있냐는건데 음...
-        // n/2보다 많기 떄문에 걍 정렬해서 제일 가운데 값 뽑으면 되긴함 근데 이것도 O(N)일텐데... 아 O(1)의 공간 이러면 걍 정렬     
+    void rotate(vector<int>& nums, int k) {
+        // 방법 3가지 
+        // 2번으로 생각난거 링크드 리스트 느낌?
+\       
+        int start = 0;
+        for(int i = 0 ; i < k ; i++){
+            start--;
+            if(start <0)start = nums.size()-1;
+        }
+        vector<int>answer;
+        int cnt = 0;
+        for(int i = 0 ; i < nums.size();i++){
+            answer.push_back(nums[start]);
+            start++;
+            if(start >= nums.size())start = 0;
+        }
+        nums = answer;
 
-        int center = nums.size()/2; 
-        sort(nums.begin() , nums.end());
-        return nums[center];
+
     }
+    
 };
