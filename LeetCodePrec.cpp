@@ -1,32 +1,17 @@
 #include <iostream>
 #include <vector>
 #include <algorithm>
-#include <map>
 
 using namespace std;
+
 class Solution {
 public:
-    int removeDuplicates(vector<int>& nums) {
-        vector<int> answer;
-        answer.push_back(nums[0]);
-        int k = nums.size();
-        int cnt = 0;
-        for(int i = 1 ; i < nums.size();i++){
-            if(nums[i] == answer[answer.size()-1]){
-                if(cnt == 0){
-                    answer.push_back(nums[i]);
-                    cnt++;
-                }else if(cnt == 1){
-   
-                    k--;
-                }
-            }else{
-                answer.push_back(nums[i]);
-                cnt = 0;
-            }
-        }
-        nums = answer;
-        return k;
+    int majorityElement(vector<int>& nums) {
+        // 시간복잡도 O(1)은 N과 상관없이 일정하게 풀 수 있냐는건데 음...
+        // n/2보다 많기 떄문에 걍 정렬해서 제일 가운데 값 뽑으면 되긴함 근데 이것도 O(N)일텐데... 아 O(1)의 공간 이러면 걍 정렬     
 
+        int center = nums.size()/2; 
+        sort(nums.begin() , nums.end());
+        return nums[center];
     }
 };
