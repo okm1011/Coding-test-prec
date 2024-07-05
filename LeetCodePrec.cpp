@@ -1,30 +1,31 @@
 #include <iostream>
 #include <vector>
 #include <algorithm>
-#include <queue>
 using namespace std;
 
 class Solution {
 public:
-    void rotate(vector<int>& nums, int k) {
-        // 방법 3가지 
-        // 2번으로 생각난거 링크드 리스트 느낌?
-\       
-        int start = 0;
-        for(int i = 0 ; i < k ; i++){
-            start--;
-            if(start <0)start = nums.size()-1;
+    bool canJump(vector<int>& nums) {
+        vector<bool>dp(nums.size(),false);
+        dp[0] = true;
+        int step_left = 0;
+        for(int i = 0; i<nums.size()-1;i++){
+            step_left = max(nums[i],step_left);
+            if( step_left > 0){
+                dp[i+1]=true;
+                step_left--;
+            }
+            else{break;}
+            
         }
-        vector<int>answer;
-        int cnt = 0;
-        for(int i = 0 ; i < nums.size();i++){
-            answer.push_back(nums[start]);
-            start++;
-            if(start >= nums.size())start = 0;
-        }
-        nums = answer;
-
-
+        return dp[nums.size()-1];
     }
-    
 };
+
+
+int main(){
+
+    vector<int>in = {2,0,0};
+    Solution s;
+    bool answer = s.canJump(in);
+}
