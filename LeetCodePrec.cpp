@@ -2,30 +2,40 @@
 #include <vector>
 #include <algorithm>
 using namespace std;
+int Min;
+
 
 class Solution {
 public:
-    bool canJump(vector<int>& nums) {
-        vector<bool>dp(nums.size(),false);
-        dp[0] = true;
-        int step_left = 0;
-        for(int i = 0; i<nums.size()-1;i++){
-            step_left = max(nums[i],step_left);
-            if( step_left > 0){
-                dp[i+1]=true;
-                step_left--;
+    void dfs(vector<int>& num,int start , int step_left ,int cnt ){
+        if(cnt >= Min)return;
+        for(int i = 1 ; i<=step_left ; i++){
+            if(start+i >= num.size()-1){
+                if(cnt+1<Min)Min=cnt+1;
+                return;
+            }else{
+                dfs(num, start + i , max(step_left - i , num[start + i]) ,cnt + 1 );
             }
-            else{break;}
             
         }
-        return dp[nums.size()-1];
+    }
+    int jump(vector<int>& nums) {
+        int answer = 0;
+        // this should be dfs..
+        Min = 100001; // Reset Min for each test case
+        if(nums.size() <= 1) return 0;
+        dfs(nums,0,nums[0],0);
+        return Min;
     }
 };
 
 
-int main(){
 
-    vector<int>in = {2,0,0};
+int main(){
+    vector<int>num = {2,1};
     Solution s;
-    bool answer = s.canJump(in);
+    int answer = s.jump(num);
+    cout << answer;
+    
+    
 }
