@@ -4,6 +4,14 @@
         "list": "cpp",
         "vector": "cpp",
         "xstring": "cpp",
-        "algorithm": "cpp"
+        "algorithm": "cpp",
+        "xutility": "cpp",
+        "map": "cpp",
+        "utility": "cpp",
+        "initializer_list": "cpp",
+        "xhash": "cpp",
+        "xtree": "cpp",
+        "unordered_map": "cpp",
+        "iostream": "cpp"
     }
 }
