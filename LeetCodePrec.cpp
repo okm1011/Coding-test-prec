@@ -1,54 +1,36 @@
 #include <iostream>
 #include <vector>
-#include <algorithm>
-#include <random>
-#include <map>
-
 using namespace std;
 
-class RandomizedSet {
+class Solution {
 public:
-    map<int,int>m;
-    RandomizedSet() {
+    vector<int> productExceptSelf(vector<int>& nums) {
+        int n = nums.size();
+        vector<int>answer(n,0);
+        vector<int>left(n,0);
+        vector<int>right(n,0);
+        left[0] = nums[0];
+        right[n-1] = nums[n-1];
 
-    }
-    
-    bool insert(int val) {
-        if(m.find(val) == m.end()){
-            m.insert(make_pair(val,1));
-            return true;
-        }else{
-            return false;
+        
+
+        for(int i = 1; i<n;i++){
+            left[i] = left[i-1] * nums[i];
         }
-    }
-    
-    bool remove(int val) {
-        if(m.find(val) != m.end()){
-            m.erase(m.find(val));
-            return true;
-        }else{
-            return false;
+        for(int i = n-2 ; i>=0;i--){
+            right[i] = right[i+1] * nums[i];
         }
-    }
-    
-    int getRandom() {
-        random_device rd;
-        mt19937 mt(rd());
-        uniform_int_distribution<int> dist(0,m.size()-1);
-        auto randNum = dist(mt);
-        map<int,int>::iterator iter = m.begin();
-        for(int i = 0 ; i<randNum ;i++){
-            iter++;
+        for(int i = 0 ; i<n ; i++){
+            if(i == 0){
+                answer[i] = right[i+1];
+            }else if(i == n-1){
+                answer[i] = left[i-1];
+            }else{
+                answer[i] = left[i-1] * right[i+1];
+            }
+            
         }
-        return iter->first; 
+        return answer;
+
     }
 };
-
-/**
- * Your RandomizedSet object will be instantiated and called as such:
- * RandomizedSet* obj = new RandomizedSet();
- * bool param_1 = obj->insert(val);
- * bool param_2 = obj->remove(val);
- * int param_3 = obj->getRandom();
- */
-
