@@ -1,21 +1,40 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
 class Solution {
 public:
-    int candy(vector<int>& ratings) {
-        int n = ratings.size();
-        vector<int>left(n, 1), right(n, 1);
-        
-        //traverse left to right and compare curr value with left side value
-        for(int i = 1; i < n; i++)
-            if(ratings[i] > ratings[i-1]) left[i] = left[i-1]+1;
-              
-         //traverse right to left and compare curr value with right side value
-        for(int i = n-2; i >= 0; i--)
-            if(ratings[i] > ratings[i+1]) right[i] = right[i+1]+1;
-        
-        int ans = 0;
-        for(int i = 0; i < n; i++)
-            ans += max(left[i], right[i]);
-        
-        return ans;            
+    int trap(vector<int>& height) {
+        int n = height.size();
+        int l_max = height[0];
+        int r_max = height[n-1];
+        int l_pos = 1 , r_pos = n-2;
+        int water_cnt = 0;
+        while(l_pos<=r_pos){
+            if(height[l_pos]>=l_max){
+                l_max = height[l_pos];
+                l_pos++;
+            }else if(height[r_pos] >= r_max){
+                r_max = height[r_pos];
+                r_pos--;                
+            }else if(l_max <= r_max ){
+                water_cnt += l_max - height[l_pos];
+                l_pos++;
+            }else{
+                water_cnt += r_max - height[r_pos];
+                r_pos--;
+            }
+        }
+
+        return water_cnt;
     }
 };
+
+int main(){
+    Solution S;
+    vector<int> input = {4,2,0,3,2,5};
+    int answer = S.trap(input);
+
+    return 0;
+}
