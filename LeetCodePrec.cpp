@@ -1,51 +1,36 @@
 #include <iostream>
 #include <vector>
 #include <algorithm>
-#include <map>
+#include <stack>
 #include <string>
 using namespace std;
+
 class Solution {
 public:
-    string intToRoman(int num) {
-        vector<int>nums;
-        vector<string> answer_tmp;
-        map<int,vector<string>>m;
-        
-        vector<string>one = {"I","X","C","M"};
-        vector<string>five = {"V","L","D"};
-        vector<string>four = {"IV","XL","CD"};
-        vector<string>nine = {"IX","XC","CM"};
-        m.insert(make_pair(1,one));
-        m.insert(make_pair(5,five));
-        m.insert(make_pair(4,four));
-        m.insert(make_pair(9,nine));
-        while(num != 0){
-            //cout << num%10 << "\n";
-            nums.push_back(num%10);
-            num /= 10;
-        }
-
-        for(int i = 0; i<nums.size();i++){
-            if(nums[i] == 1 || nums[i] == 4 || nums[i] == 5 || nums[i] == 9){
-                answer_tmp.push_back(m[nums[i]][i]);
-            }else{
-                if(nums[i]>5){
-                    for(int j = 0 ; j<nums[i]-5 ; j++){
-                        answer_tmp.push_back(m[1][i]);
-                    }
-                    answer_tmp.push_back(m[5][i]);
+    string reverseWords(string s) {
+        //stack 쓰면 되잖아
+        stack<string> st;
+        string temp ="";
+        for(int i = 0 ; i<s.size();i++){
+            if(temp != "" && s[i]==' '){
+                if(st.empty()){
+                    st.push(temp);
+                    temp = "";
                 }else{
-                    if(nums[i]==0)continue;
-                    for(int j = 0 ; j<nums[i] ; j++){
-                        answer_tmp.push_back(m[1][i]);
-                    }
+                    st.push(temp+" ");
+                    temp = "";
                 }
+
+            }else if(s[i] != ' '){
+                temp += s[i];
             }
-            
         }
+        if(temp != "" && !st.empty()) st.push(temp+" ");
+        else st.push(temp);
         string answer = "";
-        for(int i = answer_tmp.size()-1; i>=0 ; i--){
-            answer += answer_tmp[i];
+        while(!st.empty()){
+            answer += st.top();
+            st.pop();
         }
         return answer;
 
@@ -54,8 +39,7 @@ public:
 
 int main(){
     Solution s;
-    string answer = s.intToRoman(1994);
-    cout <<answer;
-
+    string input = "EPY2giL";
+    string answer = s.reverseWords(input);
     return 0;
 }
