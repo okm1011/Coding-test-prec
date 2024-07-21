@@ -1,45 +1,42 @@
 #include <iostream>
 #include <vector>
 #include <algorithm>
-#include <stack>
 #include <string>
 using namespace std;
-
 class Solution {
 public:
-    string reverseWords(string s) {
-        //stack 쓰면 되잖아
-        stack<string> st;
-        string temp ="";
-        for(int i = 0 ; i<s.size();i++){
-            if(temp != "" && s[i]==' '){
-                if(st.empty()){
-                    st.push(temp);
-                    temp = "";
+    string convert(string s, int numRows) {
+        string answer = "";
+        if(numRows==1)return s;
+        for(int i = 0 ; i < numRows ; i++){
+            int ptr = i;
+            bool flag = true;
+            while(ptr<s.size()){
+                answer+=s[ptr];
+                if(i == 0 || i == numRows -1){
+                    ptr+=(numRows + numRows - 2);
                 }else{
-                    st.push(temp+" ");
-                    temp = "";
+                    if(flag){
+                        ptr+=(2*numRows - (2*(i+1)));
+                        flag = false;
+                    }else{
+                        ptr+=(2*numRows - (2*(numRows-i)));
+                        flag = true;
+                    }
+                    // 이 사이가 문제네.
+                    // 1 3 5 7 9 (row 3)
+                    // 1 5 7 11 13 (row 4)
                 }
 
-            }else if(s[i] != ' '){
-                temp += s[i];
             }
         }
-        if(temp != "" && !st.empty()) st.push(temp+" ");
-        else st.push(temp);
-        string answer = "";
-        while(!st.empty()){
-            answer += st.top();
-            st.pop();
-        }
+        cout << answer;
         return answer;
-
     }
 };
 
 int main(){
+    string input = "A";
     Solution s;
-    string input = "EPY2giL";
-    string answer = s.reverseWords(input);
-    return 0;
+    string answer = s.convert(input,1);
 }
