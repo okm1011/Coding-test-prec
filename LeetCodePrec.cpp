@@ -26,57 +26,97 @@ public:
         }else{
             // over 3
             answer += words[0];
+            int remain_size = maxWidth;
+            for(int i = 0 ; i<words.size() ; i++){
+                remain_size -= words[i].size();
+            }
             int div = words.size() -1;
-            vector<int>space(div,maxWidth/div);
-            for(int i = 0 ; i < maxWidth%div ; i++){
+            vector<int>space(div,remain_size/div);
+            for(int i = 0 ; i < remain_size%div ; i++){
                 space[i] +=1;
             }
             int i_cnt = 0;
             for(int i = 1 ; i<words.size()-1; i++){
-                answer += ' ' * space[i_cnt];
+                
+                for(int j = 0 ; j < space[i_cnt];j++){
+                    answer += ' ';
+                }
+                i_cnt++;
                 answer += words[i];
-                answer += ' ' * space[i_cnt+1];
-                i_cnt += 2;
+
+            }
+            for(int j = 0 ; j < space[i_cnt];j++){
+                answer += ' ';
             }
             answer += words[words.size()-1];
             return answer;
         }
 
     }
-    vector<string> fullJustify(vector<string>& words, int maxWidth) {
-        vector<string> temp;
-        vector<string> answer;
-        int cnt = 0;
+    string last_space(vector<string>& words, int maxWidth) {
+        string answer = "";
         for(int i = 0 ; i<words.size() ; i++){
-            cnt += words[i].size();
-            if(temp.size()<2){
-                cnt += 1;
+            if(i == words.size()-1){
+                answer += words[i];
             }else{
-                cnt += 2;
+                answer += (words[i] + ' ');
+
             }
-            if(cnt <= maxWidth){
-                temp.push_back(words[i]);
-            }else{
-                string temp_answer = space(temp,maxWidth);
-                answer.push_back(temp_answer);
-                cnt = 0;
-                vector<string>temp_re;
-                temp = temp_re;
-            }
+            
         }
+        int remain_size = maxWidth - answer.size();
+        for(int i = 0 ; i< remain_size ; i++){
+            answer += ' ';
+        }
+
         return answer;
+        
+
+    }
+    vector<string> fullJustify(vector<string>& words, int maxWidth) {
+        vector<string> answer;
+        vector<string> temp;
+        if(words.size() == 1){
+            temp.push_back(words[0]);
+            string temp_answer = last_space(temp,maxWidth);
+            answer.push_back(temp_answer);
+            return answer;
+        }else{
+            int cnt = 0;
+            for(int i = 0 ; i<words.size() ; i++){
+                cnt += words[i].size() + 1;
+
+                if(cnt <= maxWidth+1){
+                    temp.push_back(words[i]);
+                }else{
+                    string temp_answer = space(temp,maxWidth);
+                    answer.push_back(temp_answer);
+                    cnt = 0;
+                    vector<string>temp_re;
+                    temp = temp_re;
+                    i--;
+                }
+            }
+            string temp_answer = last_space(temp,maxWidth);
+            answer.push_back(temp_answer);            
+            return answer;
+        }
+
 
 
 
     }
 };
 
+
 int main(){
-    vector<string>input = {"This", "is", "an", "example", "of", "text", "justification."};
-    int maxWidth = 16;
+    vector<string>input = {"a"};
+    int maxWidth = 1;
     Solution s;
     vector<string>answer = s.fullJustify(input,maxWidth);
-
+    for(int i = 0 ; i < answer.size() ; i++){
+        cout << answer[i] << "\n";
+    }
 
     return 0;
 }
