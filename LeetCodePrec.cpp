@@ -5,22 +5,30 @@ using namespace std;
 
 class Solution {
 public:
-    vector<int> twoSum(vector<int>& numbers, int target) {
-        vector<int>answer;
-        int f_p = 0;
-        int l_p = numbers.size()-1;
-        while(1){
-            int result = numbers[f_p] + numbers[l_p];
-            if(result > target){
-                l_p--;
-            }else if(result < target){
-                f_p++;
+    int maxArea(vector<int>& height) {
+        int Max = -1000;
+        int start = 0 ;
+        int end = height.size()-1;
+        while(start < end){
+            int water = (end - start) * min(height[end],height[start]);
+            if(Max < water){
+                Max = water;
+            }
+            if(height[start]>=height[end]){
+                end--;
             }else{
-                break;
+                start++;
             }
         }
-        answer.push_back(f_p+1);
-        answer.push_back(l_p+1);
-        return answer;
+        return Max;
     }
 };
+
+int main(){
+    vector<int>in = {1,2,1};
+    Solution s;
+    int answer = s.maxArea(in);
+    cout << answer;
+
+    return 0;
+}
