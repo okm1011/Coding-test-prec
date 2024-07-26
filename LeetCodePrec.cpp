@@ -5,30 +5,16 @@ using namespace std;
 
 class Solution {
 public:
-    int maxArea(vector<int>& height) {
-        int Max = -1000;
-        int start = 0 ;
-        int end = height.size()-1;
-        while(start < end){
-            int water = (end - start) * min(height[end],height[start]);
-            if(Max < water){
-                Max = water;
-            }
-            if(height[start]>=height[end]){
-                end--;
-            }else{
-                start++;
-            }
-        }
-        return Max;
+    vector<vector<int>> threeSum(vector<int>& nums) {
+        sort(nums.begin(),nums.end());      
+        nums.erase(unique(nums.begin(),nums.end()),nums.end());  
     }
 };
 
 int main(){
-    vector<int>in = {1,2,1};
+    vector<int>nums = {-1,0,1,2,-1,-4};
     Solution s;
-    int answer = s.maxArea(in);
-    cout << answer;
+    vector<vector<int>>anwer = s.threeSum(nums);
 
     return 0;
 }
