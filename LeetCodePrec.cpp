@@ -22,7 +22,7 @@ int main(){
         data.push_back({w*part, c*part});
         }
     }
-    // 이러면 원래 배낭문제로 풀수 있음 여러개있는거를 걍 묶음 상품으로 바꿔버리는거지. 근데 이걸 2의 배수로 바꾸면 모든 경우의 수의 조합이 나온다는거임.
+    // 이러면 원래 배낭문제로 풀수 있음 여러개있는거를 걍 묶음 상품으로 바꿔버리는거지. 근데 이걸 2의 배수로 바꾸면 모든 경우의 수의 조합이 나온다는거임...
     vector<vector<int>>dp(m+1,vector<int>(data.size(),0));
     // for(int i = 0 ; i<n ;i++){
     //     int weight , value , q;
