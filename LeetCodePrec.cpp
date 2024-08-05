@@ -1,21 +1,28 @@
-#include <iostream>
-#include <vector>
-#include <algorithm>
+#include<iostream>
+#include<vector>
+#include<algorithm>
 using namespace std;
 
 class Solution {
 public:
-    vector<vector<int>> threeSum(vector<int>& nums) {
-        vector<vector<int>>answer;
-        // 정렬해놓고 
+    int minSubArrayLen(int target, vector<int>& nums) {
+        int answer=0;
         sort(nums.begin(),nums.end());
-        return answer;
+        for(int i = nums.size()-1;i>=0;i--){
+            if(nums[i]>=target){
+                answer++;
+                return answer;
+            }else{
+                target-=nums[i];
+                answer++;
+            }
+        }
+        return 0;
     }
 };
-
 int main(){
 
-    vector<int>input = {-1,0,1,2,-1,-4};
+    vector<int> input = {12,28,83,4,25,26,25,2,25,25,25,12};
     Solution s;
-    vector<vector<int>>answer = s.threeSum(input);
+    int answer = s.minSubArrayLen(213,input);
 }
