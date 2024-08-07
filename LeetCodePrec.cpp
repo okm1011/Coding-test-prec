@@ -2,47 +2,37 @@
 #include <vector>
 #include <string>
 #include <algorithm>
+#include <unordered_map>
 using namespace std;
 
 class Solution {
 public:
-    vector<int> findSubstring(string s, vector<string>& words) {
-        vector<int>ch(words.size(),0);
-        int length = words[0].size();
-        vector<int>answer;
-        int left = 0;
-        int cnt = 0;
-        //left가 answer에 들어가는 시작지점이 되는거임.
-        for(int right = 0 ; right<s.size();right+=length){
-            string temp = s.substr(right,length);
-            cout << "ch: " << find(words.begin(),words.end(),temp)- words.begin() << "\n";
-            if(find(words.begin(),words.end(),temp) == words.end()){
-                left=right+length;
-                fill_n(ch.begin(),ch.size(),0);
-                cnt = 0;
-            }else if(ch[find(words.begin(),words.end(),temp) - words.begin()] == 0){
-                ch[find(words.begin(),words.end(),temp)- words.begin()] = 1;
-                cnt++;
-                if(cnt == words.size()){
-                    answer.push_back(left);
-                    ch[find(words.begin(),words.end(),s.substr(left,length))- words.begin()] = 0;
-                    cnt--;
-                    left+=length;
-                }
-
-            }else{
-                left = right;
-                fill_n(ch.begin(),ch.size(),0);
-                cnt = 1;
-                ch[find(words.begin(),words.end(),temp) - words.begin()] = 1;
-            }
+    vector<int>findSubstring(string s, vector<string>& words) {
+        unordered_map<string, int> counts;
+        for (string word : words)
+        counts[word]++;
+        int n = s.length(), num = words.size(), len = words[0].length();
+        vector<int>indexes;
+        for (int i = 0; i < n - num * len + 1; i++) {
+        unordered_map<string, int> seen;
+        int j = 0;
+        for (; j < num; j++) {
+        string word = s.substr(i + j * len, len);
+        if (counts.find(word) != counts.end()) {
+        seen[word]++;
+        if (seen[word] > counts[word])
+        break;
         }
-        return answer;
+        else break;
+        }
+        if (j == num) indexes.push_back(i);
+        }
+        return indexes;
     }
 };
 int main(){
-    string input = "barfoothefoobarman";
-    vector<string>input2 = {"foo","bar"};
+    string input = "wordgoodgoodgoodbestword";
+    vector<string>input2 = {"word","good","best","good"};
     Solution s;
     vector<int>answer = s.findSubstring(input , input2);
     return 0;
