@@ -1,39 +1,85 @@
 #include <iostream>
 #include <vector>
-#include <string>
-#include <algorithm>
-#include <unordered_map>
 using namespace std;
 
 class Solution {
 public:
-    vector<int>findSubstring(string s, vector<string>& words) {
-        unordered_map<string, int> counts;
-        for (string word : words)
-        counts[word]++;
-        int n = s.length(), num = words.size(), len = words[0].length();
-        vector<int>indexes;
-        for (int i = 0; i < n - num * len + 1; i++) {
-        unordered_map<string, int> seen;
-        int j = 0;
-        for (; j < num; j++) {
-        string word = s.substr(i + j * len, len);
-        if (counts.find(word) != counts.end()) {
-        seen[word]++;
-        if (seen[word] > counts[word])
-        break;
+    bool isValidSudoku(vector<vector<char>>& board) {
+        // 걍 각각 검사해야하나?
+        int size = 9;
+
+        for(int i = 0 ; i < size ; i++){
+            vector<int>ch(size+1,0);
+            for(int j = 0 ; j<size ; j++){
+                if(board[i][j] != '.'){
+                    if(ch[board[i][j]-'0'] != 0){
+                        return false;
+                    }else{
+                        ch[board[i][j]-'0'] = 1;
+                    }
+                }
+            }
         }
-        else break;
+        // 여기까지가 가로
+        for(int i = 0 ; i < size ; i++){
+            vector<int>ch(size+1,0);
+
+            for(int j = 0 ; j<size ; j++){
+                if(board[j][i] != '.'){
+                    if(ch[board[j][i]-'0'] != 0){
+                        return false;
+                    }else{
+                        ch[board[j][i]-'0'] = 1;
+                    }
+                }
+            }
         }
-        if (j == num) indexes.push_back(i);
+        //여기까지 세로
+        pair<int,int>ptr = {0,0};
+        while(1){
+            if(ptr.first > size -1 || ptr.second > size -1)break;
+            cout << "ptr f : " << ptr.first << "prt sec: " << ptr.second << "\n";
+            vector<int>ch(size+1,0);
+            for(int i = ptr.second ; i<ptr.second + 3 ; i++){
+                
+                
+                for(int j = ptr.first ; j<ptr.first + 3 ; j++){
+                    if(board[i][j] != '.'){
+                        if(ch[board[i][j]-'0'] != 0){
+                            return false;
+                        }else{
+                            ch[board[i][j]-'0'] = 1;
+                        }
+                    }                    
+                }
+            }
+            
+            if(ptr.first+3 >= size){
+                ptr.second+=3;
+                ptr.first = 0;
+            }else{
+                ptr.first+=3;
+            }
+            
         }
-        return indexes;
+        return true;
+        
     }
 };
 int main(){
-    string input = "wordgoodgoodgoodbestword";
-    vector<string>input2 = {"word","good","best","good"};
+    vector<vector<char>>input = {
+    {'.', '.', '.', '.', '.', '.', '5', '.', '.'},
+    {'.', '.', '.', '.', '.', '.', '.', '.', '.'},
+    {'.', '.', '.', '.', '.', '.', '.', '.', '.'},
+    {'9', '3', '.', '.', '2', '.', '4', '.', '.'},
+    {'.', '.', '7', '.', '.', '.', '3', '.', '.'},
+    {'.', '.', '.', '.', '.', '.', '.', '.', '.'},
+    {'.', '.', '.', '3', '4', '.', '.', '.', '.'},
+    {'.', '.', '.', '.', '.', '3', '.', '.', '.'},
+    {'.', '.', '.', '.', '.', '5', '2', '.', '.'}
+    };
     Solution s;
-    vector<int>answer = s.findSubstring(input , input2);
+    bool answer = s.isValidSudoku(input);
+    cout <<answer;
     return 0;
 }
