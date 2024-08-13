@@ -1,26 +1,33 @@
-#include <vector>
 #include <iostream>
-#include <algorithm>
+#include <vector>
 #include <map>
-#include <string>
-
+#include <set>
+#include <algorithm>
 using namespace std;
 class Solution {
 public:
-    vector<vector<string>> groupAnagrams(vector<string>& strs) {
-        vector<vector<string>>answer;
-        map<string,int>m;
-        int cnt = 0;
-        for(int i = 0 ; i < strs.size();i++){
-            string temp = strs[i];
-            sort(temp.begin(),temp.end());
-            auto ret = m.insert({temp,cnt});
-            if(ret.second){
-                vector<string>temp_vec = {strs[i]};
-                answer.push_back(temp_vec);
-                cnt++;
-            }else{
-                answer[m[temp]].push_back(strs[i]);
+    int longestConsecutive(vector<int>& nums) {
+        if(nums.size() == 0)return 0;
+        else if(nums.size() == 1)return 1;
+        int answer = 0;
+        set<int>s;
+        sort(nums.begin(),nums.end());
+        for(int i = 0 ; i<nums.size();i++){
+            s.insert(nums[i]);
+        }
+        int before = INT_MAX;
+        int cnt = 1;
+        for(auto temp : s){
+            if(before == INT_MAX)before = temp;
+            else{
+                if(before + 1 == temp){
+                    cnt++;
+                    before = temp;
+                }else{
+                    if(cnt > answer) answer = cnt;
+                    cnt = 1;
+                    before = temp;
+                }
             }
         }
         return answer;
@@ -28,9 +35,9 @@ public:
 };
 
 int main(){
-    vector<string>in = {"eat","tea","tan","ate","nat","bat"};
+    vector<int> in = {0,3,7,2,5,8,4,6,0,1};
     Solution s;
-    vector<vector<string>>answer = s.groupAnagrams(in);
+    int answer= s.longestConsecutive(in);
 
-    return 0;
+
 }
