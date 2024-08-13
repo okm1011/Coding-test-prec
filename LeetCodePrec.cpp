@@ -1,43 +1,34 @@
 #include <iostream>
-#include <vector>
-#include <map>
-#include <set>
 #include <algorithm>
+#include <vector>
 using namespace std;
 class Solution {
 public:
-    int longestConsecutive(vector<int>& nums) {
-        if(nums.size() == 0)return 0;
-        else if(nums.size() == 1)return 1;
-        int answer = 0;
-        set<int>s;
-        sort(nums.begin(),nums.end());
-        for(int i = 0 ; i<nums.size();i++){
-            s.insert(nums[i]);
-        }
-        int before = INT_MAX;
-        int cnt = 1;
-        for(auto temp : s){
-            if(before == INT_MAX)before = temp;
-            else{
-                if(before + 1 == temp){
-                    cnt++;
-                    before = temp;
+    static bool compare(vector<int>a , vector<int>b){
+        return a[0] > b[0];
+    }
+    vector<vector<int>> merge(vector<vector<int>>& intervals) {
+        vector<vector<int>>answer;
+        int start = -1;
+        int end = 0;
+        sort(intervals.begin(),intervals.end(),compare);
+        for(auto temp : intervals){
+            if(start == -1){
+                start = temp[0];
+                end = temp[1];
+            }else{
+                if(end >= temp[0] && end<=temp[1]){
+                    end = temp[1];
                 }else{
-                    if(cnt > answer) answer = cnt;
-                    cnt = 1;
-                    before = temp;
+                    vector<int>in = {start,end};
+                    answer.push_back(in);
+                    start = temp[0];
+                    end = temp[1];
                 }
             }
         }
+        vector<int>in = {start,end};
+        answer.push_back(in);
         return answer;
     }
 };
-
-int main(){
-    vector<int> in = {0,3,7,2,5,8,4,6,0,1};
-    Solution s;
-    int answer= s.longestConsecutive(in);
-
-
-}
