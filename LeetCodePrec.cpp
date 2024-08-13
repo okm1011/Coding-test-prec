@@ -4,31 +4,31 @@
 using namespace std;
 class Solution {
 public:
-    static bool compare(vector<int>a , vector<int>b){
-        return a[0] > b[0];
+    static bool comp(vector<int>a,vector<int>b){
+        return a[0]<b[0];
     }
     vector<vector<int>> merge(vector<vector<int>>& intervals) {
         vector<vector<int>>answer;
+        sort(intervals.begin(),intervals.end(),comp);
         int start = -1;
         int end = 0;
-        sort(intervals.begin(),intervals.end(),compare);
         for(auto temp : intervals){
             if(start == -1){
                 start = temp[0];
                 end = temp[1];
             }else{
-                if(end >= temp[0] && end<=temp[1]){
-                    end = temp[1];
-                }else{
-                    vector<int>in = {start,end};
-                    answer.push_back(in);
+                if(temp[0] > end ){
+                    answer.push_back({start,end});
                     start = temp[0];
-                    end = temp[1];
+                    end = temp[1];                    
+                }else{
+                    if(temp[0]<=start)start = temp[0];
+                    if(temp[1]>=end) end = temp[1];
                 }
             }
+            
         }
-        vector<int>in = {start,end};
-        answer.push_back(in);
+        answer.push_back({start,end});
         return answer;
     }
 };
