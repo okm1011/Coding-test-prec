@@ -1,34 +1,54 @@
-#include <iostream>
-#include <algorithm>
-#include <vector>
+#include<iostream>
+#include<vector>
+#include<algorithm>
 using namespace std;
+
 class Solution {
 public:
-    static bool comp(vector<int>a,vector<int>b){
-        return a[0]<b[0];
-    }
-    vector<vector<int>> merge(vector<vector<int>>& intervals) {
+    vector<vector<int>> insert(vector<vector<int>>& intervals, vector<int>& newInterval) {
+        vector<pair<int,int>>temp_vec;
         vector<vector<int>>answer;
-        sort(intervals.begin(),intervals.end(),comp);
-        int start = -1;
-        int end = 0;
+        int flag = false;
         for(auto temp : intervals){
-            if(start == -1){
-                start = temp[0];
-                end = temp[1];
+            if(!flag && temp[0]>=newInterval[0]){
+                flag = true;
+                temp_vec.push_back({newInterval[0],newInterval[1]});
+                temp_vec.push_back({temp[0],temp[1]});
             }else{
-                if(temp[0] > end ){
-                    answer.push_back({start,end});
-                    start = temp[0];
-                    end = temp[1];                    
-                }else{
-                    if(temp[0]<=start)start = temp[0];
-                    if(temp[1]>=end) end = temp[1];
-                }
+                temp_vec.push_back({temp[0],temp[1]});
             }
             
         }
-        answer.push_back({start,end});
+        if(!flag)temp_vec.push_back({newInterval[0],newInterval[1]});
+
+        int start = -1;
+        int end = 0;
+        for(auto temp : temp_vec){
+            if(start == -1){
+                start = temp.first;
+                end = temp.second;
+            }else{
+                if(temp.first<=end && temp.first>=start || temp.second<=end && temp.second>=start){
+                    if(temp.first <= start)start = temp.first;
+                    if(temp.second >= end) end = temp.second;
+                }else{
+                    answer.push_back({start,end});
+                    start = temp.first;
+                    end = temp.second;                    
+                }
+
+            }
+        }answer.push_back({start,end});
         return answer;
     }
 };
+
+int main(){
+    vector<vector<int>>inter = {{1,5}};
+    vector<int>new_vec = {2,7};
+    Solution s;
+    vector<vector<int>>ret = s.insert(inter,new_vec);
+
+
+    return 0;
+}
