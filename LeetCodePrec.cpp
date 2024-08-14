@@ -1,54 +1,36 @@
-#include<iostream>
-#include<vector>
-#include<algorithm>
+#include <iostream>
+#include <vector>
+#include <algorithm>
 using namespace std;
-
 class Solution {
 public:
-    vector<vector<int>> insert(vector<vector<int>>& intervals, vector<int>& newInterval) {
-        vector<pair<int,int>>temp_vec;
-        vector<vector<int>>answer;
-        int flag = false;
-        for(auto temp : intervals){
-            if(!flag && temp[0]>=newInterval[0]){
-                flag = true;
-                temp_vec.push_back({newInterval[0],newInterval[1]});
-                temp_vec.push_back({temp[0],temp[1]});
-            }else{
-                temp_vec.push_back({temp[0],temp[1]});
-            }
-            
-        }
-        if(!flag)temp_vec.push_back({newInterval[0],newInterval[1]});
-
-        int start = -1;
-        int end = 0;
-        for(auto temp : temp_vec){
-            if(start == -1){
-                start = temp.first;
-                end = temp.second;
-            }else{
-                if(temp.first<=end && temp.first>=start || temp.second<=end && temp.second>=start){
-                    if(temp.first <= start)start = temp.first;
-                    if(temp.second >= end) end = temp.second;
+    int findMinArrowShots(vector<vector<int>>& points) {
+        int answer = 0;
+        sort(points.begin(),points.end());
+        int target;
+        for(auto temp : points){
+            if(temp == points[0]){
+                target = temp[1];
+                answer++;
+            }else{ 
+                // 안에 포함되는 경우 겹치는 경우 아예 떨어지는 경우.
+                if(target>temp[0]){
+                    target = temp[1];
+                    answer++;
                 }else{
-                    answer.push_back({start,end});
-                    start = temp.first;
-                    end = temp.second;                    
+                    if(target>=temp[1])target = temp[1];
                 }
 
             }
-        }answer.push_back({start,end});
+        }
         return answer;
     }
 };
 
 int main(){
-    vector<vector<int>>inter = {{1,5}};
-    vector<int>new_vec = {2,7};
+    vector<vector<int>>in = {{10,16},{2,8},{1,6},{7,12}};
     Solution s;
-    vector<vector<int>>ret = s.insert(inter,new_vec);
-
+    int answer = s.findMinArrowShots(in);
 
     return 0;
 }
