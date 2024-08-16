@@ -1,39 +1,31 @@
-class MinStack {
+class Solution {
 public:
-    stack<int>st;
-    MinStack() {
-        ;
-    }
-    
-    void push(int val) {
-        st.push(val);
-    }
-    
-    void pop() {
-        st.pop();
-    }
-    
-    int top() {
+    int evalRPN(vector<string>& tokens) {
+        stack<int>st;
+
+        for(int i = 0 ; i < tokens.size() ; i++){
+            if(tokens[i] == "+" || tokens[i] == "-" || tokens[i] == "*" || tokens[i] == "/"){
+                int first = st.top();
+                st.pop();
+                int second = st.top();
+                st.pop();
+                int temp;
+                if(tokens[i] == "+"){
+                    temp = first+second;
+                }else if(tokens[i] == "-"){
+                    temp = second-first;
+                }else if(tokens[i] == "*"){
+                    temp = first*second;
+                }else{
+                    temp = second/first;
+                }
+                cout << "temp = " << temp <<"\n";
+                st.push(temp);
+            }else{
+                int temp = stoi(tokens[i]);
+                st.push(temp);
+            }
+        }
         return st.top();
     }
-    
-    int getMin() {
-        stack<int>temp = st;
-        int min = INT_MAX;
-        while(!temp.empty()){
-            if(temp.top()<min)min = temp.top();
-            temp.pop();
-        }
-        return min;
-
-    }
 };
-
-/**
- * Your MinStack object will be instantiated and called as such:
- * MinStack* obj = new MinStack();
- * obj->push(val);
- * obj->pop();
- * int param_3 = obj->top();
- * int param_4 = obj->getMin();
- */
