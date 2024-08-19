@@ -1,32 +1,25 @@
 class Solution {
 public:
-    int calculate(string s) {
-        stack <int> nums, ops;
-        int num = 0;
-        int rst = 0;
-        int sign = 1;
-        for (char c : s) { 
-            if (isdigit(c)) {
-                num = num * 10 + c - '0';
+    ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) {
+        ListNode* dummy=new ListNode();
+        ListNode* temp=dummy;
+        int carry=0;
+        while(l1!=NULL || l2!=NULL || carry){
+            int sum=0;
+            if(l1!=NULL){
+                sum+=l1->val;
+                l1=l1->next;
             }
-            else {
-                rst += sign * num;
-                num = 0;
-                if (c == '+') sign = 1;
-                if (c == '-') sign = -1;
-                if (c == '(') {
-                    nums.push(rst);
-                    ops.push(sign);
-                    rst = 0;
-                    sign = 1;
-                }
-                if (c == ')' && ops.size()) {
-                    rst = ops.top() * rst + nums.top();
-                    ops.pop(); nums.pop();
-                }
+            if(l2!=NULL){
+                sum+=l2->val;
+                l2=l2->next;
             }
+            sum+=carry;
+            carry=sum/10;
+            ListNode* newnode=new ListNode(sum%10);
+            temp->next=newnode;
+            temp=temp->next;
         }
-        rst += sign * num;
-        return rst;
+        return dummy->next;
     }
 };
