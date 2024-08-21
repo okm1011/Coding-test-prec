@@ -1,66 +1,75 @@
-/*
-// Definition for a Node.
-class Node {
-public:
-    int val;
-    Node* next;
-    Node* random;
-    
-    Node(int _val) {
-        val = _val;
-        next = NULL;
-        random = NULL;
-    }
-};
-*/
-
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
 class Solution {
 public:
-    Node* copyRandomList(Node* head) {
-        if(head == NULL)return NULL;
-        Node* copy_head = new Node(head->val);
-        Node* dummy_temp = copy_head;
-        Node* temp = head;
-        map<Node* , int> m_ch;
-        int cnt = 0;
-        m_ch.insert({temp,cnt});
-        // head check
-
-        while(temp->next != NULL){
-            Node* next_node = new Node(temp->next->val);
-            cnt++;
-            m_ch.insert({temp->next,cnt});
-            dummy_temp->next = next_node;
-            dummy_temp = next_node;
-            temp = temp->next;
-        }
-        dummy_temp->next = NULL;
-
-
+    ListNode* reverseBetween(ListNode* head, int left, int right) {
+        stack<ListNode*>st;
+        ListNode*temp = head;
+        int index = 1;
+        ListNode* first = nullptr;
+        ListNode* end = nullptr;
         
-        int turn = 0;
-        dummy_temp = copy_head;
-        temp = head;
-        while(turn <= cnt){
-            if(temp->random != NULL){
-                int index = m_ch[temp->random];
-                Node* target = copy_head;
-                for(int i = 0 ; i<index ; i++){
-                    target = target->next;
-                }
-                dummy_temp->random = target;
-            }else{
-                dummy_temp->random = NULL;
+        while(1){
+
+            if(index >= left && index <= right){
+                st.push(temp);
             }
-            temp = temp->next;
-            dummy_temp = dummy_temp -> next;
-            turn++;
+            if(index == left-1 && left - 1 >=1){
+                first = temp;
+            }
+            if(index == right+1){
+                end = temp;
+                break;
+            }
+            if(temp->next != nullptr){
+                temp = temp->next;
+                index++;
+            }else{
+                break;
+            }
         }
-
-
-
-
-
-        return copy_head;
+        if(first == nullptr){
+            head = st.top();
+            st.pop();
+            temp = head;
+            
+            while(!st.empty()){
+                temp->next = st.top();
+                st.pop();
+                temp = temp->next;
+            }
+            temp->next = end;
+        }else{
+            index = 1;
+            temp = head;
+            while(1){
+                if(index == left-1){
+                    temp->next = first;
+                    index++;
+                }else if(index == left){
+                    while(!st.empty()){
+                        temp->next = st.top();
+                        st.pop();
+                        temp = temp->next;
+                    }
+                    temp->next = end;
+                       
+                    break;                 
+                }else{
+                    temp = temp->next;
+                    index++;
+                }
+            }
+        }
+        
+        return head;
     }
 };
