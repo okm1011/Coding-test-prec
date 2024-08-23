@@ -10,43 +10,41 @@
  */
 class Solution {
 public:
-    ListNode* removeNthFromEnd(ListNode* head, int n) {
-        
-        stack<ListNode*>st;
-        ListNode*temp = head;
-        while(temp->next != nullptr){
-            st.push(temp);
-            temp= temp -> next;
-        }
-        st.push(temp);
-        if(st.size() == 1)return nullptr;
+    ListNode* deleteDuplicates(ListNode* head) {
+        if(head == nullptr)return nullptr;
+        set<int>ch;
+        ListNode* dummy = new ListNode(0);
+        ListNode* temp = dummy;
+        ListNode* check = head;
+        ListNode* last_check = dummy;
 
-        int cnt = 0;
-        ListNode*prev = NULL;
-        ListNode*cur = NULL;
-        while(cnt < n && !st.empty()){
-            
-            if(cur == NULL){
-                cur = st.top();
-                st.pop();
-                cnt++;
+        while(1){
+
+            if(check->next == nullptr)break;
+
+            if(check->val == check->next->val){
+                int same_val = check->val;
+                while(1){
+                    if(check->next != nullptr)check = check->next;
+                    else {
+                        temp -> next = nullptr;
+                        return dummy->next;
+                    }
+
+                    if(same_val != check->val)break;
+                }
             }else{
-                prev = cur;
-                cur = st.top();
-                st.pop();
-                cnt++;
+                
+                last_check = check;
+                temp->next = last_check;
+                temp = temp->next;
+                if(check->next != nullptr)check = check->next;
+                else break;
             }
-        }
-        if(st.empty()){
-            return prev;
-        }else{
-            temp = st.top();
-            
-            temp -> next = prev;
-            return head;
-        }
 
+        }
         
-
+        if(last_check->val != check->val) temp -> next = check;
+        return dummy->next;
     }
 };
