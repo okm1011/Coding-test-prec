@@ -11,26 +11,40 @@
  */
 class Solution {
 public:
-    int index = 0;
-    TreeNode* buildTree(vector<int>& preorder, vector<int>& inorder) {
-        if(preorder.empty())return nullptr;
-        TreeNode* answer = make_node(preorder,inorder,0,preorder.size()-1);
-        return answer;
-
-        
-    }
-    TreeNode* make_node(vector<int>& preorder, vector<int>& inorder,int start, int end){
-        if(start>end)return nullptr;
-        TreeNode* temp = new TreeNode(preorder[index]);
+    int index;
+    TreeNode* buildTree(vector<int>& inorder, vector<int>& postorder) {
+        if(inorder.empty())return nullptr;
+        index = postorder.size()-1;
+        TreeNode* answer = new TreeNode(postorder[postorder.size()-1]);
         int i;
-        for(i = start ; i<=end ; i++){
-            if(preorder[index] == inorder[i]){
-                index++;
+        for(i = 0 ; i<postorder.size();i++){
+            if(inorder[i] == postorder[postorder.size()-1]){
                 break;
             }
         }
-        temp->left = make_node(preorder,inorder,start,i-1);
-        temp->right = make_node(preorder,inorder,i+1,end);
+        answer->left = make_node(inorder,postorder,{0,i-1});
+        answer->right = make_node(inorder,postorder, {i+1,postorder.size()-1});
+        return answer;
+    }
+    TreeNode* make_node(vector<int>& inorder, vector<int>& postorder , pair<int,int>pos){
+        if(pos.first>pos.second)return nullptr;
+        int max_pos = INT_MIN;
+        for(int i = pos.first ; i<=pos.second ; i++){
+            int target = inorder[i];
+            auto pos_idx = find(postorder.begin(),postorder.end(),target);
+            if(pos_idx-postorder.begin() > max_pos)max_pos =pos_idx-postorder.begin();
+        }
+        TreeNode* temp = new TreeNode(postorder[max_pos]);
+
+        int i;
+        for(i = pos.first ; i<=pos.second;i++){
+            if(inorder[i] == postorder[max_pos]){
+                break;
+            }
+        }        
+        temp->left = make_node(inorder,postorder,{pos.first,i-1});
+        temp->right = make_node(inorder,postorder,{i+1,pos.second});
+
         return temp;
     }
 };
