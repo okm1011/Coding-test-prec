@@ -1,44 +1,48 @@
-/**
- * Definition for a binary tree node.
- * struct TreeNode {
- *     int val;
- *     TreeNode *left;
- *     TreeNode *right;
- *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
- *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
- *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
- * };
- */
+/*
+// Definition for a Node.
+class Node {
+public:
+    int val;
+    Node* left;
+    Node* right;
+    Node* next;
+
+    Node() : val(0), left(NULL), right(NULL), next(NULL) {}
+
+    Node(int _val) : val(_val), left(NULL), right(NULL), next(NULL) {}
+
+    Node(int _val, Node* _left, Node* _right, Node* _next)
+        : val(_val), left(_left), right(_right), next(_next) {}
+};
+*/
 
 class Solution {
 public:
-    int index;
-    TreeNode* buildTree(vector<int>& inorder, vector<int>& postorder) {
-        if(postorder.empty())return nullptr;
-        if(postorder.size() == 1){
-            TreeNode* answer = new TreeNode(postorder[0]);
-            return answer;
+    Node* connect(Node* root) {
+        if(root==nullptr) return nullptr;
+        Node* temp = root;
+        vector<Node*>arr;
+        while(1){
+            arr.push_back(temp);
+            if(temp->left != NULL)temp = temp->left;
+            else break;
         }
-        index = postorder.size()-1;
-        TreeNode* answer = make_node(inorder,postorder,0,postorder.size()-1);
-        return answer;
+        int cnt = arr.size();
+        while(cnt>0){
+            int round = 0;
+            temp = arr[cnt-1];
+            for(int i = 1 ; i<cnt ; i++){
+                
 
-        
-    }
-    TreeNode* make_node(vector<int>& inorder, vector<int>& postorder,int start, int end){
-        if(start > end)return nullptr;
 
-        TreeNode* temp = new TreeNode(postorder[index]);
-
-        int i;
-        for(i = start ; i<end ; i++ ){
-            if(inorder[i] == postorder[index]){
-                index--;
-                break;
+                temp = temp -> next;
+                round++;
             }
+
         }
-        temp->right = make_node(inorder,postorder,i+1,end);
-        temp->left = make_node(inorder,postorder,start,i-1);
-        return temp;
+
+        return root;
     }
+
+
 };
