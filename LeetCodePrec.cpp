@@ -18,48 +18,51 @@ public:
 
 class Solution {
 public: 
-    static bool comp(pair<Node*,int>a ,pair<Node*,int>b ){
-        return a.second < b.second;
-        
-    }
 
     vector<pair<Node*,int>>pair;
+    
     Node* connect(Node* root) {
         if(root==nullptr) return nullptr;
         pair.push_back({root,1});
-        add_node(root,2);
-        sort(pair.begin(),pair.end(),comp);
+        queue<Node*>q;
+        q.push(root);
         int val = 1;
+        add_node(q,val);
         Node*temp = root;
-        for(int i = 1 ; i<pair.size();i++){
-            cout << "val : " << pair[i].first->val << " num : "<<pair[i].second << "\n";
-            if(pair[i].second == val){
+        int num = 1;
+        for(int i = 1 ; i<pair.size() ; i++){
+            if(pair[i].second == num){
                 temp->next = pair[i].first;
-                temp = pair[i].first;
+                temp = temp->next;
             }else{
-                temp->next = NULL;
+                temp->next= NULL;
                 temp = pair[i].first;
+                num++;
+
             }
-            val = pair[i].second;
         }
         return root;
     }
-    void add_node(Node* temp,int num){
-        Node* target = temp;
-        vector<Node*>cont;
-        if(target->left != NULL){
-            pair.push_back({target->left , num});
-            cont.push_back(target->left);
-            add_node(target->left , num+1);
+    void add_node(queue<Node*>temp_q ,int val){
+        val++;
+        queue<Node*>change_q;
+        while(!temp_q.empty()){
+            
+            Node* target = temp_q.front();
+            temp_q.pop();
+            if(target->left != NULL){
+                pair.push_back({target->left,val});
+                change_q.push(target->left);
+            }
+            if(target->right != NULL){
+                pair.push_back({target->right,val});
+                change_q.push(target->right);
+            }
         }
-        if(target->right != NULL){
-            pair.push_back({target->right,num});
-            cont.push_back(target->right);
-            add_node(target->right , num+1);
-        }
-        
+        if(!change_q.empty())add_node(change_q,val);
         
     }
+
 
 
 };
