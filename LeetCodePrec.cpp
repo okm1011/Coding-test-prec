@@ -1,68 +1,42 @@
-/*
-// Definition for a Node.
-class Node {
-public:
-    int val;
-    Node* left;
-    Node* right;
-    Node* next;
-
-    Node() : val(0), left(NULL), right(NULL), next(NULL) {}
-
-    Node(int _val) : val(_val), left(NULL), right(NULL), next(NULL) {}
-
-    Node(int _val, Node* _left, Node* _right, Node* _next)
-        : val(_val), left(_left), right(_right), next(_next) {}
-};
-*/
-
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
 class Solution {
-public: 
-
-    vector<pair<Node*,int>>pair;
-    
-    Node* connect(Node* root) {
-        if(root==nullptr) return nullptr;
-        pair.push_back({root,1});
-        queue<Node*>q;
-        q.push(root);
-        int val = 1;
-        add_node(q,val);
-        Node*temp = root;
-        int num = 1;
-        for(int i = 1 ; i<pair.size() ; i++){
-            if(pair[i].second == num){
-                temp->next = pair[i].first;
-                temp = temp->next;
-            }else{
-                temp->next= NULL;
-                temp = pair[i].first;
-                num++;
-
-            }
+public:
+    vector<TreeNode*>arr;
+    void flatten(TreeNode* root) {
+        // 포인트는 어떻게 in - place에서 교체를 하느냐인데....
+        // pre order 순차대로가면서 right바꿔버리면 .... 참조가안되잖아
+        // 일단 순회부분부터 만들어보자 메모리 신경안쓰고
+        if(root == NULL)return;
+        pre_order(root);
+        TreeNode* temp = root;
+        for(int i = 1 ; i<arr.size();i++){
+            temp->left = NULL;
+            temp->right = arr[i];
+            temp = arr[i];
         }
-        return root;
+        return;
     }
-    void add_node(queue<Node*>temp_q ,int val){
-        val++;
-        queue<Node*>change_q;
-        while(!temp_q.empty()){
-            
-            Node* target = temp_q.front();
-            temp_q.pop();
-            if(target->left != NULL){
-                pair.push_back({target->left,val});
-                change_q.push(target->left);
-            }
-            if(target->right != NULL){
-                pair.push_back({target->right,val});
-                change_q.push(target->right);
-            }
+    void pre_order(TreeNode* temp){
+        TreeNode* target = temp;
+        arr.push_back(target);
+        if(temp->left != NULL){
+            target = temp->left;
+            pre_order(target);
         }
-        if(!change_q.empty())add_node(change_q,val);
-        
-    }
+        if(temp->right != NULL){
+            target = temp->right;
+            pre_order(target);
+        }
 
-
-
+    } 
 };
