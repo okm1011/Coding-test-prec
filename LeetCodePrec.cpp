@@ -9,33 +9,35 @@
  *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
  * };
  */
-class Solution {
+class BSTIterator {
 public:
-    bool selected = false;
-    int answer=0;
-    int sumNumbers(TreeNode* root) {
-        vector<TreeNode*>arr;
-        search(root,arr);
-        return answer;
-    }
-    void search(TreeNode* target , vector<TreeNode*>arr){
-
-        arr.push_back(target);
-        if(target->left == NULL && target->right == NULL){
-            int sum = 0;
-            for(int i = 0 ; i<arr.size();i++){
-                sum  = sum*10 + arr[i]->val;
-            }
-            answer+=sum;
-            cout << "left :" << answer<<"\n";
-            return;
+    vector<TreeNode*>arr;
+    int pos = -1;
+    BSTIterator(TreeNode* root) {
+        in_order(root);
+        for(auto a : arr){
+            cout << a->val << "\n";
         }
-        if(target->left !=NULL)search(target->left,arr);
-            
-
-        
-        if(target->right != NULL)search(target->right,arr);
-        
-        
+    }
+    void in_order(TreeNode*target){
+        if(target->left != NULL)in_order(target->left);
+        arr.push_back(target);
+        if(target->right != NULL)in_order(target->right);   
+    }
+    int next() {
+        pos++;
+        return arr[pos]->val;
+    }
+    
+    bool hasNext() {
+        if(pos+1<arr.size())return true;
+        else return false;
     }
 };
+
+/**
+ * Your BSTIterator object will be instantiated and called as such:
+ * BSTIterator* obj = new BSTIterator(root);
+ * int param_1 = obj->next();
+ * bool param_2 = obj->hasNext();
+ */
