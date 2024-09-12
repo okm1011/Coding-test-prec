@@ -21,7 +21,7 @@ public:
     void search(TreeNode* target , vector<TreeNode*>arr){
 
         arr.push_back(target);
-        if(target->left == NULL){
+        if(target->left == NULL && target->right == NULL){
             int sum = 0;
             for(int i = 0 ; i<arr.size();i++){
                 sum  = sum*10 + arr[i]->val;
@@ -29,21 +29,13 @@ public:
             answer+=sum;
             cout << "left :" << answer<<"\n";
             return;
-        }else{
-            search(target->left,arr);
         }
+        if(target->left !=NULL)search(target->left,arr);
+            
+
         
-        if(target->right == NULL){
-            int sum = 0;
-            for(int i = 0 ; i<arr.size();i++){
-                sum  = sum*10 + arr[i]->val;
-            }
-            answer+=sum;
-            cout << "right :" << answer<<"\n";
-            return;
-        }else{
-            search(target->right,arr);
-        }
+        if(target->right != NULL)search(target->right,arr);
+        
         
     }
 };
