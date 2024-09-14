@@ -4,40 +4,60 @@
  *     int val;
  *     TreeNode *left;
  *     TreeNode *right;
- *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
- *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
- *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
  * };
  */
-class BSTIterator {
+class Solution {
 public:
-    vector<TreeNode*>arr;
-    int pos = -1;
-    BSTIterator(TreeNode* root) {
-        in_order(root);
-        for(auto a : arr){
-            cout << a->val << "\n";
-        }
-    }
-    void in_order(TreeNode*target){
-        if(target->left != NULL)in_order(target->left);
-        arr.push_back(target);
-        if(target->right != NULL)in_order(target->right);   
-    }
-    int next() {
-        pos++;
-        return arr[pos]->val;
-    }
-    
-    bool hasNext() {
-        if(pos+1<arr.size())return true;
-        else return false;
-    }
-};
+    map<TreeNode*,int>m;
+    TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
+        set_level(root,1);
+        // for(auto a : m){
+        //     cout << "val = " << a.first->val << "level: "<<a.second<<"\n";
+        // }
+        if(m[p]<m[q]){
+            
+            TreeNode* temp = p;
+            queue<TreeNode*>que;
+            que.push(temp);
 
-/**
- * Your BSTIterator object will be instantiated and called as such:
- * BSTIterator* obj = new BSTIterator(root);
- * int param_1 = obj->next();
- * bool param_2 = obj->hasNext();
- */
+            while(!que.empty()){
+                TreeNode* top = que.front();
+                cout << top->val << "\n";
+                if(top->left == q or top->right == q)return p;
+                else{
+                    if(top->left != NULL) que.push(top->left);
+                    if(top->right != NULL) que.push(top->right);
+                    que.pop();
+                }
+            }
+        }else if(m[p]>m[q]){
+            TreeNode* temp = q;
+            queue<TreeNode*>que;
+            que.push(temp);
+
+            while(!que.empty()){
+                TreeNode* top = que.front();
+                cout << top->val << "\n";
+                if(top->left == p or top->right == p)return q;
+                else{
+                    if(top->left != NULL) que.push(top->left);
+                    if(top->right != NULL) que.push(top->right);
+                    que.pop();
+                }
+            }
+        }
+        TreeNode* answer = not_itself(root,p,q);
+        return answer;
+        
+    }
+    void set_level(TreeNode* temp,int level){
+        m.insert({temp,level});
+        if(temp->left != NULL)set_level(temp->left,level+1);
+        if(temp->right != NULL)set_level(temp->right,level+1);
+    }
+    TreeNode* not_itself(TreeNode* root,TreeNode* p , TreeNode* q){
+        // 이부분 필요
+    }
+
+};
