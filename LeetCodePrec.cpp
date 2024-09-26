@@ -1,61 +1,31 @@
-#include <string>
-#include <vector>
 #include <iostream>
-
+#include <vector>
 using namespace std;
-int gcd(int a, int b){
-    if(b==0)return a;
-    else{
-        return gcd(b,a%b);
-    }
-    
-}
-
-int get_gcd_all(vector<int>array,int size){
-    if(size == 1)return array[0];
-    else{
-        int cnt = 2;
-        int gcd_temp = gcd(array[0],array[1]);
-        while(cnt<size){
-            if(gcd_temp == 1)return 1;
-            gcd_temp = gcd(max(gcd_temp,array[cnt]),min(gcd_temp,array[cnt]));
-            cnt++;
+bool sucess =false;
+int max_cost = 0;
+void dfs(vector<vector<int>>road , vector<int>ch , int current, int goal,int cost){
+    if(cost>max_cost)return;
+    if(current == goal)sucess = true;
+    for(int i = 0; i<road.size();i++){
+        if(ch[i] == 0 && road[i][0] == current){
+            ch[i] = 1;
+            dfs(road,ch,road[i][1],goal,cost+road[i][2]);
         }
-        return gcd_temp;            
     }
-
-    
-    
 }
-int solution(vector<int> arrayA, vector<int> arrayB) {
+int solution(int N, vector<vector<int> > road, int K) {
     int answer = 0;
-    // arr a의 최대 공약수로 b 가 다 나누어지는데 a보다 작은 공약수로 안나눠지는건 말이 안되는거같기도함
-    int A_gcd = get_gcd_all(arrayA,arrayA.size());
-    int B_gcd = get_gcd_all(arrayB,arrayB.size());
-    if(A_gcd == 1 && B_gcd == 1 || A_gcd == B_gcd)return 0;
-    else{
-        bool A_gcd_flag = false;
-        bool B_gcd_flag = false;
-        
-        if(A_gcd != 1){
-            A_gcd_flag = true;
-            for(int i = 0 ; i<arrayB.size();i++){
-                if(arrayB[i]%A_gcd == 0)A_gcd_flag = false;
-            }            
+    max_cost = K;
+    // [실행] 버튼을 누르면 출력 값을 볼 수 있습니다.
+    // dfs + back tracking으로 풀 수 있지않을까
+    // 1에서 시작하는거로 출발해서 
+    for(int i = 2 ; i<=N ; i++){
+        vector<int>ch(road.size(),0);
+        dfs(road,ch,1,i,0);
+        if(sucess){
+            answer++;
+            sucess = false;
         }
-        if(B_gcd != 1){
-            B_gcd_flag = true;
-            for(int i = 0 ; i<arrayA.size();i++){
-                if(arrayA[i]%B_gcd == 0)B_gcd_flag = false;
-            }            
-        }
-        if(A_gcd_flag && B_gcd_flag)answer = max(A_gcd, B_gcd);
-        else if(A_gcd_flag && !B_gcd_flag) answer = A_gcd;
-        else if(!A_gcd_flag && B_gcd_flag) answer = B_gcd;
-        else answer = 0;
-
-    }
-
-
+    }   
     return answer;
 }
