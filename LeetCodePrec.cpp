@@ -1,40 +1,50 @@
 #include <iostream>
 #include <vector>
 using namespace std;
-bool sucess =false;
+int cnt = 0;
 int max_cost = 0;
-void dfs(vector<vector<int>>road , vector<int>ch , int current, int goal,int cost){
-    if(cost>max_cost)return;
-    if(current == goal){
-        sucess = true;
+vector<int>conf;
+void dfs(vector<vector<int>>road , vector<int>ch , int current,int cost){
+    if(conf[current] == 0 && cost<=max_cost){
+        conf[current] = 1;
+        //cout << "cureent: " << current << "cost : "<<cost <<"\n";
+        cnt++;
+
+    }else if(cost>max_cost){
         return;
     }
+    
     for(int i = 0; i<road.size();i++){
-        if(ch[i] == 0 && road[i][0] == current){
-            ch[i] = 1;
-            dfs(road,ch,road[i][1],goal,cost+road[i][2]);
-            ch[i] = 0;
-        }
-        if(ch[i] == 0 && road[i][1] == current){
-            ch[i] = 1;
-            dfs(road,ch,road[i][0],goal,cost+road[i][2]);
-            ch[i] = 0;
+        if(road[i][0] == current){
+            if(ch[road[i][1]] == 0){
+                ch[road[i][1]] = 1;
+                dfs(road,ch,road[i][1],cost+road[i][2]);
+                ch[road[i][1]] = 0;
+            }
+        }else if(road[i][1] == current){
+            if(ch[road[i][0]] == 0){
+                ch[road[i][0]] = 1;
+                dfs(road,ch,road[i][0],cost+road[i][2]);
+                ch[road[i][0]] = 0;
+            }
         }
     }
+    return;
+    
 }
 int solution(int N, vector<vector<int> > road, int K) {
     int answer = 0;
+    conf.resize(N+1,0);
+    conf[1] = 1;
     max_cost = K;
-    // [실행] 버튼을 누르면 출력 값을 볼 수 있습니다.
-    // dfs + back tracking으로 풀 수 있지않을까
-    // 1에서 시작하는거로 출발해서 
-    for(int i = 1 ; i<=N ; i++){
-        vector<int>ch(road.size(),0);
-        dfs(road,ch,1,i,0);
-        if(sucess){
-            answer++;
-            sucess = false;
-        }
-    }   
+    vector<int>ch(N+1,0);
+    dfs(road,ch,1,0);
+    
+    
+    // 무조껀 1번마을 출발인거임.
+    // 그리고 양방향인점.
+    answer = cnt+1;
+    
+
     return answer;
 }
