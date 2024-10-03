@@ -1,42 +1,44 @@
 #include <string>
 #include <vector>
-#include <algorithm>
+#include <iostream>
+#include <cmath>
 
 using namespace std;
+int cnt= 0;
+vector<int>ch_num(10000000,0);
 
-long long perm(int n) // n! 값 구하기
-{
-    if (n == 0) return 1;
-    return n * perm(n - 1);
+bool is_prime(int n){
+    if(n==1)return false;
+    cout << n <<"\n";
+    for(int i = 2; i<=sqrt(n);i++){
+        if(n%i == 0)return false;
+    }return true;
 }
-
-void func(vector<int>& v, vector<int>& answer, long long& k)
-{
-    if (v.size() == 1) {
-        answer.push_back(v[0]);
-        return;
+void find_dfs(vector<int>nums,vector<int>ch,int target){
+    if(target!=0 && ch_num[target] == 0){
+        ch_num[target] = 1;
+        bool flag = is_prime(target);
+        if(flag)cnt++;
     }
-
-    long long p = perm(v.size() - 1);
-    for (int i = 1; i <= v.size(); ++i) {
-        if (i * p >= k) {
-            answer.push_back(v[i - 1]); // i번째기 때문에 인덱스론 i-1
-            v.erase(v.begin() + i - 1);
-            k = k - (i - 1) * p;
-            func(v, answer, k);
+    for(int i = 0 ; i<nums.size();i++){
+        if(nums[i]==0 && target == 0)continue;
+        if(ch[i] == 0){
+            ch[i]=1;
+            find_dfs(nums,ch,target*10+nums[i]);
+            ch[i] = 0;
         }
     }
 }
+int solution(string numbers) {
+    int answer = 0;
+    vector<int>nums;
+    for(int i = 0 ; i<numbers.size();i++){
+        int temp = numbers[i] - '0';
+        nums.push_back(temp);
+    }
+    vector<int>ch(nums.size(),0);
 
-vector<int> solution(int n, long long k)
-{
-    vector<int> answer;
-
-    vector<int> v(n);
-    for (int i = 0; i < n; ++i)
-        v[i] = i + 1;  // n=4의 경우 v = [1,2,3,4] 에서 시작
-
-    func(v, answer, k);
-
+    find_dfs(nums,ch,0);
+    answer = cnt;
     return answer;
 }
