@@ -1,43 +1,42 @@
 #include <string>
 #include <vector>
-#include <stack>
-#include <iostream>
-using namespace std;
-long long target = 0;
-vector<int>dfs_answer;
-bool flag = false;
-void dfs(vector<int>ch ,stack<int>temp, int turns,int n,int k){
-    
-    if(flag) return;
-    if(temp.size() == n){
-        target++;
-        if(target == k){
-            flag = true;
-            while(!temp.empty()){
+#include <algorithm>
 
-                dfs_answer.push_back(temp.top());
-                temp.pop();
-            }
-        }
+using namespace std;
+
+long long perm(int n) // n! 값 구하기
+{
+    if (n == 0) return 1;
+    return n * perm(n - 1);
+}
+
+void func(vector<int>& v, vector<int>& answer, long long& k)
+{
+    if (v.size() == 1) {
+        answer.push_back(v[0]);
         return;
     }
-    for(int i = 1; i<ch.size();i++){
-        if(ch[i] == 0){
-            ch[i] = 1;
-            temp.push(i);
-            dfs(ch,temp,turns+1,n,k);
-            ch[i] = 0;
-            temp.pop();
+
+    long long p = perm(v.size() - 1);
+    for (int i = 1; i <= v.size(); ++i) {
+        if (i * p >= k) {
+            answer.push_back(v[i - 1]); // i번째기 때문에 인덱스론 i-1
+            v.erase(v.begin() + i - 1);
+            k = k - (i - 1) * p;
+            func(v, answer, k);
         }
     }
 }
-vector<int> solution(int n, long long k) {
+
+vector<int> solution(int n, long long k)
+{
     vector<int> answer;
-    vector<int> ch(n+1,0);
-    stack<int> temp;
-    dfs(ch,temp,0,n,k);
-    for(int i = dfs_answer.size()-1;i>=0 ;i--){
-        answer.push_back(dfs_answer[i]);
-    }
+
+    vector<int> v(n);
+    for (int i = 0; i < n; ++i)
+        v[i] = i + 1;  // n=4의 경우 v = [1,2,3,4] 에서 시작
+
+    func(v, answer, k);
+
     return answer;
 }
