@@ -1,44 +1,62 @@
 #include <string>
 #include <vector>
 #include <iostream>
-#include <cmath>
 
 using namespace std;
-int cnt= 0;
-vector<int>ch_num(10000000,0);
-
-bool is_prime(int n){
-    if(n==1)return false;
-    cout << n <<"\n";
-    for(int i = 2; i<=sqrt(n);i++){
-        if(n%i == 0)return false;
-    }return true;
-}
-void find_dfs(vector<int>nums,vector<int>ch,int target){
-    if(target!=0 && ch_num[target] == 0){
-        ch_num[target] = 1;
-        bool flag = is_prime(target);
-        if(flag)cnt++;
-    }
-    for(int i = 0 ; i<nums.size();i++){
-        if(nums[i]==0 && target == 0)continue;
-        if(ch[i] == 0){
-            ch[i]=1;
-            find_dfs(nums,ch,target*10+nums[i]);
-            ch[i] = 0;
-        }
+int dfs(string name, int current , int cnt){
+    if(cnt >= name.size()-1)return 3;
+    if(name[current+cnt] != 'A' && name[name.size()-1-(cnt-1)] != 'A'){
+        return dfs(name,current,cnt+1);
+    }else if(name[current+cnt] != 'A'){
+        return 1;
+    }else if(name[name.size()-1-(cnt-1)] != 'A'){
+        return 2;
+    }else{
+        return 4;
     }
 }
-int solution(string numbers) {
+int solution(string name) {
     int answer = 0;
-    vector<int>nums;
-    for(int i = 0 ; i<numbers.size();i++){
-        int temp = numbers[i] - '0';
-        nums.push_back(temp);
+    int all_cnt = 0;
+    for(int i = 0 ; i<name.size();i++){
+        if(name[i] !='A')all_cnt+=min((name[i]-'A'),('Z'-name[i]+1));
     }
-    vector<int>ch(nums.size(),0);
-
-    find_dfs(nums,ch,0);
-    answer = cnt;
+    answer+=all_cnt;
+    int index = 0;
+    int direc = 0;
+    int move_cnt = 0;
+    while(all_cnt != 0){
+        if(index == -1)index = name.size()-1;
+        if(name[index] != 'A'){
+            all_cnt-=min((name[index]-'A'),('Z'-name[index]+1));
+            if(all_cnt == 0)break;
+            direc = dfs(name,0,1);
+            cout << "index: " << index << "direc: "<<direc <<"\n";
+            if(direc == 1){
+                index++;
+                move_cnt++;
+            }else if(direc == 2){
+                index--;
+                move_cnt++;
+            }else{
+                index++;
+                move_cnt++;
+            }       
+        }else{
+            if(direc == 1){
+                index++;
+                move_cnt++;
+            }else if(direc == 2){
+                index--;
+                move_cnt++;
+            }else{
+                index++;
+                move_cnt++;
+            }            
+        }
+        
+        // 1일때 직진 2일때 후진 3일때 노상관
+    }
+    answer += move_cnt;
     return answer;
 }
