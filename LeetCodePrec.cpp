@@ -5,14 +5,13 @@
 using namespace std;
 int dfs(string name, int current , int cnt){
     if(cnt >= name.size()-1)return 3;
-    if(name[current+cnt] != 'A' && name[name.size()-1-(cnt-1)] != 'A'){
-        return dfs(name,current,cnt+1);
-    }else if(name[current+cnt] != 'A'){
+
+    if(name[current+cnt] != 'A' && name[name.size()-1-(cnt-1)] == 'A'){
         return 1;
-    }else if(name[name.size()-1-(cnt-1)] != 'A'){
+    }else if(name[name.size()-1-(cnt-1)] != 'A' && name[current+cnt] == 'A' ){
         return 2;
     }else{
-        return 4;
+        return  dfs(name,current,cnt+1);
     }
 }
 int solution(string name) {
@@ -59,4 +58,12 @@ int solution(string name) {
     }
     answer += move_cnt;
     return answer;
+}
+
+int main(){
+
+    string name = "BBBBAAAABA";
+    int res = solution(name);
+    cout << res;
+    return 0;
 }
