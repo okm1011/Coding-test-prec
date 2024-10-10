@@ -1,62 +1,46 @@
-#include <string>
-#include <vector>
 #include <iostream>
-#include <algorithm>
-
+#include<vector>
 using namespace std;
-
-int solution(string name) {
-    int answer = 0;
-    int all_cnt = 0;
-    for(int i = 0 ; i<name.size();i++){
-        if(name[i] !='A')all_cnt+=min((name[i]-'A'),('Z'-name[i]+1));
-    }
-    answer+=all_cnt;
-    
-    vector<int>steps;
-    // 오,왼,오-왼,왼-오
-    // 오
-    int index = name.size()-1;
-    int right_step = name.size()-1;
-    while(name[index] == 'A' && index > 0){
-        right_step --;
-        index--;
-    }
-    index = 1;
-    int left_step = name.size()-1;
-    while(name[index] == 'A' && index <= name.size()-1){
-        left_step --;
-        index++;
-    }
-    steps.push_back(right_step);
-    steps.push_back(left_step);
-    
-    for(int i = 0 ; i <name.size();i++){
-        int start = 0;
-        int end = 0;
-       //여기서 왼-오 , 오-왼 스타트 엔드가 애매하니까 싹다해봐그냥 어차피 name 20자임
-        if(name[i] != 'A'){
-            start = i;
-            int index = i+1;
-            while(1){
-                if(name[index] == 'A'){
-                    index++;   
-                }else{
-                    break;
-                }
-                
-            }
-            if(index < name.size())end = index;
-            steps.push_back(min(start + start + name.size()-end , name.size()-end +name.size()-end + start ));
+int cnt_same(vector<int>same){
+    int temp = 0 ;
+    int max = 0;
+    for(int i = 0 ; i < same.size(); i++){
+        if(same[i] == 1){
+            temp++;
+            if(temp>max) max = temp;
+        }else{
+            temp = 0;
         }
     }
-    sort(steps.begin(),steps.end());
+    return max;
+}
+int solution(vector<vector<int>> board)
+{
+    int answer = 1;
+    int y = board.size();
+    int x = board[0].size();
+    if(x == 0 || y == 0)return 0;
+    vector<int>same (x,0);
+    for(int i = 0 ; i < x ; i++){
+        same[i] = board[0][i];
+    }
+    for(int i = 1 ; i<y;i++){
+        int h = i+1;
 
-    answer+=steps[0];
+        for(int j = 0 ; j<x ; j++){            
+            if(same[j] == 1 && board[i][j] == 1){
+                same[j] = 1;
+            } 
+            else{
+                same[j] = 0;
+            } 
+        }
+        int cnt = cnt_same(same);
+        int temp_answer = 0;
+        if(cnt >= h) temp_answer = h*h;
+        if(temp_answer>answer)answer = temp_answer;
+
+    }
     
-        // BBBAAABBAAAAAAAAAAAAAAAAAAAAAAABBBAABB
-        
-        
-        
     return answer;
 }
