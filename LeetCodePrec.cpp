@@ -1,32 +1,27 @@
 #include <iostream>
-#include<vector>
+#include <vector>
+#include <cmath>
 using namespace std;
 
-int find_sq(vector<vector<int>> board, int y , int x , int max_y,int max_x, int step){
-    if(y+step >= max_y || x+step >= max_x)return step;
+int dp[1001][1001]; // 최대 보드판의 크기
 
-    for(int i = y ; i<y+step+1;i++){
-        for(int j = x ; j<x+step+1 ; j++){
-            if(board[i][j] == 0)return step;
-        }
-    }
-    return find_sq(board,y,x,max_y,max_x,step+1);
+// 점화식을 구현한 부분
+int getRectangleSize(int x, int y){
+    return min(min(dp[x-1][y],dp[x][y-1]),dp[x-1][y-1])+1;
 }
-
 int solution(vector<vector<int>> board)
-{
+{   
     int answer = 0;
-    int y = board.size();
-    int x = board[0].size();
-    if(x==0 || y==0)return 0;
-    for(int i = 0 ; i<y;i++){
-        for(int j = 0 ; j<x ; j++){
-            if(board[i][j] == 1){
-                int temp = find_sq(board,i,j,y,x,1);
-                if(temp*temp > answer)answer = temp*temp;
-            }
+    for(int i = 0; i < board.size(); i++){
+        for(int j = 0; j < board[i].size(); j++){
+            // 해당 좌표가 0이라면 그 좌표를 
+            // 오른쪽 아래 꼭짓점으로 하는 정사각형이 만들어질 수 없다.
+            if(board[i][j] == 0) dp[i+1][j+1] = 0;
+            
+            // 점화식을 적용한다.
+            else dp[i+1][j+1] = getRectangleSize(i+1,j+1);
+            answer = max(answer,dp[i+1][j+1]); // 가장 큰 사이즈가 답
         }
     }
-    
-    return answer;
+    return answer * answer; // 구해야하는 것은 넓이이기 때문에 길이x길이
 }
