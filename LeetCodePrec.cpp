@@ -1,27 +1,61 @@
-#include <iostream>
+#include <string>
 #include <vector>
-#include <cmath>
+#include <stack>
+
 using namespace std;
+vector<vector<int>>min_answer;
 
-int dp[1001][1001]; // 최대 보드판의 크기
-
-// 점화식을 구현한 부분
-int getRectangleSize(int x, int y){
-    return min(min(dp[x-1][y],dp[x][y-1]),dp[x-1][y-1])+1;
-}
-int solution(vector<vector<int>> board)
-{   
-    int answer = 0;
-    for(int i = 0; i < board.size(); i++){
-        for(int j = 0; j < board[i].size(); j++){
-            // 해당 좌표가 0이라면 그 좌표를 
-            // 오른쪽 아래 꼭짓점으로 하는 정사각형이 만들어질 수 없다.
-            if(board[i][j] == 0) dp[i+1][j+1] = 0;
+void dfs(vector<stack<int>>towers,vector<vector<int>>steps,int n ){
+    if(towers[0].size() == n){
+        if(steps.size()>min_answer.size())min_answer = steps;
+    }
+    for(int i = 0 ; i<3;i++){
+        if(!towers[i].empty()){
+            int right = i+1;
+            int left = i-1;
+            if(right > 2) right = 0;
+            if(left<0) left = 2;
+            if(towers[right].empty() || towers[right].top()>towers[i].top() ){
+                int top = towers[i].top();
+                towers[i].pop();
+                towers[right].push(top);
+                steps.push_back({i,right});
+                dfs(towers,steps,n);
+            }
+            if( towers[left].empty() || towers[left].top()>towers[i].top()){
+                int top = towers[i].top();
+                towers[i].pop();
+                towers[left].push(top);
+                steps.push_back({i,left});
+                dfs(towers,steps,n);                
+            }
             
-            // 점화식을 적용한다.
-            else dp[i+1][j+1] = getRectangleSize(i+1,j+1);
-            answer = max(answer,dp[i+1][j+1]); // 가장 큰 사이즈가 답
         }
     }
-    return answer * answer; // 구해야하는 것은 넓이이기 때문에 길이x길이
+}
+
+vector<vector<int>> solution(int n) {
+    vector<vector<int>> answer;
+    // 음............... 그냥 중복 가능 모든 경우의수 다 때려박으면 될 듯.
+    vector<vector<int>> temp;
+    vector<stack<int>>towers;
+    stack<int>tower1;
+    for(int i = n ; i >= 1 ; i--){
+        tower1.push(i);
+    }
+    stack<int>tower2;
+    stack<int>tower3;
+    towers.push_back(tower1);
+    towers.push_back(tower2);
+    towers.push_back(tower3);
+    dfs(towers,temp,n);
+    answer = min_answer;
+    return answer;
+}
+int main(){
+    int n = 2;
+    vector<vector<int>>answer =solution(n);
+
+
+
 }
