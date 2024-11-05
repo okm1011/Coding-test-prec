@@ -1,52 +1,52 @@
 #include <string>
 #include <vector>
-#include <algorithm>
-#include <deque>
+#include <queue>
+#include <iostream>
 using namespace std;
 
-int solution(int bridge_length, int weight, vector<int> truck_weights) {
-    int answer = 0;
-    // 이건 기본적으로 스택이아니고 큐 아닌가 다리 올라가서 빠져나가는데 2초인거네 음
-    // 일단 작은걸로 줄세워서 여러개 할 수 있나 봐야하는거아닌가
-    // 대기 입장에서는 디큐에 올라가있는거 + 1 이 갯수보다작고 총무게보다 작으면 넣는거고
-    // 디큐 입장에서는 매초 count올리고 count 1이면 pop 해주면 될 거 같은데
-
-    deque<pair<int,int>>bridge;
-    int index = 0;
-    int sum_weight = 0;
-    int presize_bridge = 0;
-    while(1){
-        // while 탈출 조건은 브릿지 비어있고 대기 트럭 없으면 break;
-        if(bridge.empty() && index == truck_weights.size())break;
-        answer++;
-        while(index<truck_weights.size()){
-            if(bridge.size() < bridge_length && sum_weight + truck_weights[index] <= weight){
-                bridge.push_back({truck_weights[index],0});
-                sum_weight+=truck_weights[index];
-                index++;
-                break;
-            }else{
-                break;
-            } 
+int check(vector<vector<int>>arr, int x_start, int y_start , int step){
+    int res = arr[y_start][x_start];
+    for(int i = y_start ; i<=y_start+step; i++){
+        for(int j = x_start ; j<=x_start+step ; j++){
+            if(res != arr[i][j])return -1;
         }
-        deque<pair<int,int>>::iterator iter;
-        for(iter = bridge.begin() ; iter != bridge.end() ; iter++){
-            iter->second++;   
-            if(iter->second == bridge_length){
-                auto front = bridge.front();
-                bridge.pop_front();
-                sum_weight-=front.first;
-            }
-        }
-        
     }
-    
-    
-    return answer+1;
+    return res;
 }
-int main(){
-    vector<int> truck_weights = {7,4,5,6};
-    int answer =solution(2,10,truck_weights);
+vector<int> solution(vector<vector<int>> arr) {
+    vector<int> answer = {0,0};
+    //bfs식으로 풀어야할듯. q에 x,y좌표로 맨 마지막 네모칸 좌표 주고.
+    queue<vector<int>>q;
+    int first_size = arr.size()-1;
+    vector<int> first = {0,0,first_size};
+    q.push(first);
+    while(!q.empty()){
+        vector<int> top = q.front();
+        q.pop();
+        int res = check(arr,top[0],top[1],top[2]);
+        //s_x,s_y,e_x,e_y
+        if(res != -1){ 
+            answer[res]++;
 
-    return 0;
+        }else{
+            //  15,15 >> 7,7 >> 3,3  3,3 >> 1,1
+            int size = top[2];
+            vector<int>temp_1 = {top[0],top[1],size/2};
+            vector<int>temp_2 = {top[0]+size/2+1 , top[1] , top[2]/2};
+            vector<int>temp_3 = {top[0] ,top[1] + size/2+1, top[2]/2};
+            vector<int>temp_4 = {top[0]+size/2+1, top[1] + size/2+1 , top[2]/2};
+            q.push(temp_1);
+            q.push(temp_2);
+            q.push(temp_3);
+            q.push(temp_4);            
+        }
+    }
+    return answer;
+}
+
+int main(){
+
+    vector<vector<int>>arr = {{1,1,0,0},{1,0,0,0},{1,0,0,1},{1,1,1,1}};
+    vector<int>answer = solution(arr);
+    cout << answer[0] << answer[1];
 }
